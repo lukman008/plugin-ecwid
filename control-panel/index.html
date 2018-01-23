@@ -51,8 +51,7 @@
 							<div class="fieldset">
 								<!--Input field taken from Ecwid CSS Framework: https://developers.ecwid.com/ecwid-css-framework/#forms -->
 								<div class="field field--medium">
-									<input type="text" class="field__input" tabindex="4" maxlength="64" value="">
-									<div class="field__placeholder">sk_test_xxxxxxxxxx</div>
+									<input type="text" id="test_secret" class="field__input" placeholder="sk_test_xxxxxxxxxx" tabindex="4" maxlength="64" value="">
 									<span class="field-state--success">
 										<svg xmlns="http://www.w3.org/2000/svg" width="26px" height="26px" viewBox="0 0 26 26" focusable="false">
 											<path d="M5 12l5.02 4.9L21.15 4c.65-.66 1.71-.66 2.36 0 .65.67.65 1.74 0 2.4l-12.3 14.1c-.33.33-.76.5-1.18.5-.43 0-.86-.17-1.18-.5l-6.21-6.1c-.65-.66-.65-1.74 0-2.41.65-.65 1.71-.65 2.36.01z"></path>
@@ -78,8 +77,7 @@
 							<div class="fieldset">
 								<!--Input field taken from Ecwid CSS Framework: https://developers.ecwid.com/ecwid-css-framework/#forms -->
 								<div class="field field--medium">
-									<input type="text" class="field__input" tabindex="4" maxlength="64" value="">
-									<div class="field__placeholder">pk_test_xxxxxxxxxx</div>
+									<input type="text" id="test_public" class="field__input" placeholder="pk_test_xxxxxxxxxx" tabindex="4" maxlength="64" value="">
 									<span class="field-state--success">
 										<svg xmlns="http://www.w3.org/2000/svg" width="26px" height="26px" viewBox="0 0 26 26" focusable="false">
 											<path d="M5 12l5.02 4.9L21.15 4c.65-.66 1.71-.66 2.36 0 .65.67.65 1.74 0 2.4l-12.3 14.1c-.33.33-.76.5-1.18.5-.43 0-.86-.17-1.18-.5l-6.21-6.1c-.65-.66-.65-1.74 0-2.41.65-.65 1.71-.65 2.36.01z"></path>
@@ -110,8 +108,7 @@
 								<div class="fieldset">
 									<!--Input field taken from Ecwid CSS Framework: https://developers.ecwid.com/ecwid-css-framework/#forms -->
 									<div class="field field--medium">
-										<input type="text" class="field__input" tabindex="4" maxlength="64" value="">
-										<div class="field__placeholder">sk_live_xxxxxxxxxx</div>
+										<input type="text" id="live_secret" class="field__input" placeholder="sk_live_xxxxxxxxxx" tabindex="4" maxlength="64" value="">
 										<span class="field-state--success">
 												<svg xmlns="http://www.w3.org/2000/svg" width="26px" height="26px" viewBox="0 0 26 26" focusable="false"><path d="M5 12l5.02 4.9L21.15 4c.65-.66 1.71-.66 2.36 0 .65.67.65 1.74 0 2.4l-12.3 14.1c-.33.33-.76.5-1.18.5-.43 0-.86-.17-1.18-.5l-6.21-6.1c-.65-.66-.65-1.74 0-2.41.65-.65 1.71-.65 2.36.01z"></path></svg>
 											</span>
@@ -132,8 +129,7 @@
 								<div class="fieldset">
 									<!--Input field taken from Ecwid CSS Framework: https://developers.ecwid.com/ecwid-css-framework/#forms -->
 									<div class="field field--medium">
-										<input type="text" class="field__input" tabindex="4" maxlength="64" value="">
-										<div class="field__placeholder">pk_live_xxxxxxxxxx</div>
+										<input type="text" id="live_public" class="field__input" placeholder="pk_live_xxxxxxxxxx" tabindex="4" maxlength="64" value="">
 										<span class="field-state--success">
 											<svg xmlns="http://www.w3.org/2000/svg" width="26px" height="26px" viewBox="0 0 26 26" focusable="false">
 												<path d="M5 12l5.02 4.9L21.15 4c.65-.66 1.71-.66 2.36 0 .65.67.65 1.74 0 2.4l-12.3 14.1c-.33.33-.76.5-1.18.5-.43 0-.86-.17-1.18-.5l-6.21-6.1c-.65-.66-.65-1.74 0-2.41.65-.65 1.71-.65 2.36.01z"></path>
@@ -174,9 +170,7 @@
 
 		<script src='functions.js'></script>
 		<script>
-			getInfoForDashboard();
-
-			// Event listeners for account name text input field
+			// Event listeners for API keys text input field
 
 			var input = document.querySelector('div#liveMode .field__input');
 			input.addEventListener('input', function () {
@@ -185,13 +179,6 @@
 				} else {
 					this.parentNode.classList.remove('field--filled');
 				}
-			});
-			input.addEventListener('focus', function () {
-				this.parentNode.classList.add('field--focus');
-			});
-			input.addEventListener('blur', function () {
-				this.parentNode.classList.remove('field--focus');
-				saveUserData();
 			});
 
 		</script>

@@ -556,7 +556,6 @@ h6 {
     font-variant: normal;
     font-family: 'font_icons';
     line-height: 1;
-    speak: none;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     -webkit-transition: color 0.1s linear;
