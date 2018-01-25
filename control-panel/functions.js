@@ -40,7 +40,7 @@ function createUserData() {
     console.log(lala);
   });
 
-  document.querySelector('div#testMode input[type="checkbox"]').checked =
+  document.querySelector('div#toggle input[type="checkbox"]').checked =
     initialConfig.testMode;
   document.querySelector("#test_secret").value = initialConfig.testSecretKey;
   document.querySelector("#test_public").value = initialConfig.testPublicKey;
@@ -81,7 +81,7 @@ function getUserData() {
   });
 
   setTimeout(function() {
-    document.querySelector('div#testMode input[type="checkbox"]').checked =
+    document.querySelector('div#toggle input[type="checkbox"]').checked =
       loadedConfig.testMode == "true";
     document.querySelector('div#testMode input[type="text"]').value =
       loadedConfig.testMode;
@@ -105,7 +105,7 @@ function saveUserData() {
   var saveData = loadedConfig;
 
   saveData.testMode = String(
-    document.querySelector('div#testMode input[type="checkbox"]').checked
+    document.querySelector('div#toggle input[type="checkbox"]').checked
   );
   saveData.testSecretKey = document.querySelector("#test_secret").value;
   saveData.testPublicKey = document.querySelector("#test_public").value;
@@ -119,4 +119,19 @@ function saveUserData() {
     console.log(savedData);
     d.className = "btn btn-primary btn-large";
   });
+}
+
+function toggleMode() {
+  var test_mode = document.getElementById("testMode");
+  var live_mode = document.getElementById("liveMode");
+
+  if (document.querySelector('div#toggle input[type="checkbox"]').checked) {
+    live_mode.style.display = "none";
+    test_mode.style.display = "block";
+    document.querySelector("#mode").innerHTML = "<b>Live Mode.</b>";
+  } else {
+    live_mode.style.display = "block";
+    test_mode.style.display = "none";
+    document.querySelector("#mode").innerHTML = "<b>Test Mode.</b>";
+  }
 }

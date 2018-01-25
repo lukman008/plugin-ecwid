@@ -23,81 +23,84 @@
 			<p>Fill in your Paystack details available on your <a href="https://dashboard.paystack.com/#/settings/developer" target="_blank">Paystack Dashboard</a></p>
 
 			<div class='block-rows'>
-					
+				
+				<div class="ecwid-g-r">
+				
+					<div class="ecwid-u-4-8 block-row-info">
+						<div class="block-row-desc">Use this toggle to switch to Paystack <span id="mode"> <b>Live Mode.</b></span></div>
+					</div>
+				
+					<div id="toggle" class="ecwid-u-4-8 block-control">
+						<!--Input field taken from Ecwid CSS Framework: https://developers.ecwid.com/ecwid-css-framework/#forms -->
+						<label aria-hidden="true" class="checkbox big">
+							<input name="" type="checkbox" checked="" onclick="toggleMode()">
+							<div data-off="disabled" data-on="enabled">
+								<div></div>
+							</div>
+						</label>
+					</div>
+				
+				</div>
+
 				<div class="block-row" id="testMode">
 					<div class="ecwid-g-r">
-
-						<div class="ecwid-u-4-8 block-row-info">
-							<div class="block-row-title">Test Mode</div>
-							<div class="block-row-desc">Use this toggle to test Paystack on your Ecwid store.</div>
-						</div>
-						
-						<div class="ecwid-u-4-8 block-control">
-							<!--Input field taken from Ecwid CSS Framework: https://developers.ecwid.com/ecwid-css-framework/#forms -->
-							<label aria-hidden="true" class="checkbox big"><input name="" type="checkbox" checked="">
-								<div data-off="disabled" data-on="enabled">
-									<div></div>
+						<div class="block-row-title">Test Mode</div>
+						<div class="ecwid-g-r">
+							<div class="ecwid-u-1-3">
+								<p>Test Secret Key</p>
+							</div>
+							<div class="ecwid-u-2-3">
+								<div class="fieldset">
+									<!--Input field taken from Ecwid CSS Framework: https://developers.ecwid.com/ecwid-css-framework/#forms -->
+									<div class="field field--medium">
+										<input type="text" id="test_secret" class="field__input" placeholder="sk_test_xxxxxxxxxx" tabindex="4" maxlength="64" value="">
+										<span class="field-state--success">
+											<svg xmlns="http://www.w3.org/2000/svg" width="26px" height="26px" viewBox="0 0 26 26" focusable="false">
+												<path d="M5 12l5.02 4.9L21.15 4c.65-.66 1.71-.66 2.36 0 .65.67.65 1.74 0 2.4l-12.3 14.1c-.33.33-.76.5-1.18.5-.43 0-.86-.17-1.18-.5l-6.21-6.1c-.65-.66-.65-1.74 0-2.41.65-.65 1.71-.65 2.36.01z"></path>
+											</svg>
+										</span>
+										<span class="field-state--close">
+											<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16"
+											 enable-background="new 0 0 16 16" xml:space="preserve" focusable="false">
+												<path d="M15.6,15.5c-0.53,0.53-1.38,0.53-1.91,0L8.05,9.87L2.31,15.6c-0.53,0.53-1.38,0.53-1.91,0c-0.53-0.53-0.53-1.38,0-1.9l5.65-5.64L0.4,2.4c-0.53-0.53-0.53-1.38,0-1.91c0.53-0.53,1.38-0.53,1.91,0l5.64,5.63l5.74-5.73c0.53-0.53,1.38-0.53,1.91,0c0.53,0.53,0.53,1.38,0,1.91L9.94,7.94l5.66,5.65C16.12,14.12,16.12,14.97,15.6,15.5z"></path>
+											</svg>
+										</span>
+									</div>
+									<div class="field__error" aria-hidden="true" style="display: none;"></div>
 								</div>
-							</label>
-						</div>
-
-					</div>
-
-					<div class="ecwid-g-r">
-						<div class="ecwid-u-1-3">
-							<p>Test Secret Key</p>
-						</div>
-						<div class="ecwid-u-2-3">
-							<div class="fieldset">
-								<!--Input field taken from Ecwid CSS Framework: https://developers.ecwid.com/ecwid-css-framework/#forms -->
-								<div class="field field--medium">
-									<input type="text" id="test_secret" class="field__input" placeholder="sk_test_xxxxxxxxxx" tabindex="4" maxlength="64" value="">
-									<span class="field-state--success">
-										<svg xmlns="http://www.w3.org/2000/svg" width="26px" height="26px" viewBox="0 0 26 26" focusable="false">
-											<path d="M5 12l5.02 4.9L21.15 4c.65-.66 1.71-.66 2.36 0 .65.67.65 1.74 0 2.4l-12.3 14.1c-.33.33-.76.5-1.18.5-.43 0-.86-.17-1.18-.5l-6.21-6.1c-.65-.66-.65-1.74 0-2.41.65-.65 1.71-.65 2.36.01z"></path>
-										</svg>
-									</span>
-									<span class="field-state--close">
-										<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16"
-										 enable-background="new 0 0 16 16" xml:space="preserve" focusable="false">
-											<path d="M15.6,15.5c-0.53,0.53-1.38,0.53-1.91,0L8.05,9.87L2.31,15.6c-0.53,0.53-1.38,0.53-1.91,0c-0.53-0.53-0.53-1.38,0-1.9l5.65-5.64L0.4,2.4c-0.53-0.53-0.53-1.38,0-1.91c0.53-0.53,1.38-0.53,1.91,0l5.64,5.63l5.74-5.73c0.53-0.53,1.38-0.53,1.91,0c0.53,0.53,0.53,1.38,0,1.91L9.94,7.94l5.66,5.65C16.12,14.12,16.12,14.97,15.6,15.5z"></path>
-										</svg>
-									</span>
-								</div>
-								<div class="field__error" aria-hidden="true" style="display: none;"></div>
 							</div>
 						</div>
-					</div>
-					
-					<div class="ecwid-g-r">
-						<div class="ecwid-u-1-3">
-							<p>Test Public Key</p>
-						</div>
-						<div class="ecwid-u-2-3">
-							<div class="fieldset">
-								<!--Input field taken from Ecwid CSS Framework: https://developers.ecwid.com/ecwid-css-framework/#forms -->
-								<div class="field field--medium">
-									<input type="text" id="test_public" class="field__input" placeholder="pk_test_xxxxxxxxxx" tabindex="4" maxlength="64" value="">
-									<span class="field-state--success">
-										<svg xmlns="http://www.w3.org/2000/svg" width="26px" height="26px" viewBox="0 0 26 26" focusable="false">
-											<path d="M5 12l5.02 4.9L21.15 4c.65-.66 1.71-.66 2.36 0 .65.67.65 1.74 0 2.4l-12.3 14.1c-.33.33-.76.5-1.18.5-.43 0-.86-.17-1.18-.5l-6.21-6.1c-.65-.66-.65-1.74 0-2.41.65-.65 1.71-.65 2.36.01z"></path>
-										</svg>
-									</span>
-									<span class="field-state--close">
-										<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16"
-										 enable-background="new 0 0 16 16" xml:space="preserve" focusable="false">
-											<path d="M15.6,15.5c-0.53,0.53-1.38,0.53-1.91,0L8.05,9.87L2.31,15.6c-0.53,0.53-1.38,0.53-1.91,0c-0.53-0.53-0.53-1.38,0-1.9l5.65-5.64L0.4,2.4c-0.53-0.53-0.53-1.38,0-1.91c0.53-0.53,1.38-0.53,1.91,0l5.64,5.63l5.74-5.73c0.53-0.53,1.38-0.53,1.91,0c0.53,0.53,0.53,1.38,0,1.91L9.94,7.94l5.66,5.65C16.12,14.12,16.12,14.97,15.6,15.5z"></path>
-										</svg>
-									</span>
+				
+						<div class="ecwid-g-r">
+							<div class="ecwid-u-1-3">
+								<p>Test Public Key</p>
+							</div>
+							<div class="ecwid-u-2-3">
+								<div class="fieldset">
+									<!--Input field taken from Ecwid CSS Framework: https://developers.ecwid.com/ecwid-css-framework/#forms -->
+									<div class="field field--medium">
+										<input type="text" id="test_public" class="field__input" placeholder="pk_test_xxxxxxxxxx" tabindex="4" maxlength="64" value="">
+										<span class="field-state--success">
+											<svg xmlns="http://www.w3.org/2000/svg" width="26px" height="26px" viewBox="0 0 26 26" focusable="false">
+												<path d="M5 12l5.02 4.9L21.15 4c.65-.66 1.71-.66 2.36 0 .65.67.65 1.74 0 2.4l-12.3 14.1c-.33.33-.76.5-1.18.5-.43 0-.86-.17-1.18-.5l-6.21-6.1c-.65-.66-.65-1.74 0-2.41.65-.65 1.71-.65 2.36.01z"></path>
+											</svg>
+										</span>
+										<span class="field-state--close">
+											<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 16 16"
+											 enable-background="new 0 0 16 16" xml:space="preserve" focusable="false">
+												<path d="M15.6,15.5c-0.53,0.53-1.38,0.53-1.91,0L8.05,9.87L2.31,15.6c-0.53,0.53-1.38,0.53-1.91,0c-0.53-0.53-0.53-1.38,0-1.9l5.65-5.64L0.4,2.4c-0.53-0.53-0.53-1.38,0-1.91c0.53-0.53,1.38-0.53,1.91,0l5.64,5.63l5.74-5.73c0.53-0.53,1.38-0.53,1.91,0c0.53,0.53,0.53,1.38,0,1.91L9.94,7.94l5.66,5.65C16.12,14.12,16.12,14.97,15.6,15.5z"></path>
+											</svg>
+										</span>
+									</div>
+									<div class="field__error" aria-hidden="true" style="display: none;"></div>
 								</div>
-								<div class="field__error" aria-hidden="true" style="display: none;"></div>
 							</div>
 						</div>
 					</div>
 				</div>
 
 
-				<div class="block-row" id="liveMode">
+				<div class="block-row" id="liveMode" style="display: none;">
 					<div class="ecwid-g-r">
 						<div class="block-row-title">Live Mode</div>
 						<div class="ecwid-g-r">
