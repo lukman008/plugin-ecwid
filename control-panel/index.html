@@ -27,14 +27,14 @@
 				<div class="ecwid-g-r">
 				
 					<div class="ecwid-u-4-8 block-row-info">
-						<div class="block-row-desc">Use this toggle to switch to Paystack <span id="mode"> <b>Live Mode.</b></span></div>
+						<small class="block-row-desc">Use Test Mode to test how Paystack works on Ecwid.</b></span></small>
 					</div>
 				
 					<div id="toggle" class="ecwid-u-4-8 block-control">
 						<!--Input field taken from Ecwid CSS Framework: https://developers.ecwid.com/ecwid-css-framework/#forms -->
 						<label aria-hidden="true" class="checkbox big">
 							<input name="" type="checkbox" checked="" onclick="toggleMode()">
-							<div data-off="disabled" data-on="enabled">
+							<div data-off="test mode" data-on="live mode">
 								<div></div>
 							</div>
 						</label>
@@ -42,7 +42,7 @@
 				
 				</div>
 
-				<div class="block-row" id="testMode">
+				<div class="block-row" id="testMode" style="display: none;">
 					<div class="ecwid-g-r">
 						<div class="block-row-title">Test Mode</div>
 						<div class="ecwid-g-r">
@@ -100,7 +100,7 @@
 				</div>
 
 
-				<div class="block-row" id="liveMode" style="display: none;">
+				<div class="block-row" id="liveMode">
 					<div class="ecwid-g-r">
 						<div class="block-row-title">Live Mode</div>
 						<div class="ecwid-g-r">

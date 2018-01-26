@@ -7399,7 +7399,6 @@ div.shop .dropdown .dropdown-content > span.body a:hover {
 
 .block-rows .block-row {
     padding: 0px 0 16px;
-    border-top: 1px solid #d8d8d8;
 }
 
 .block-rows .block-row--noborder {
@@ -8055,8 +8054,7 @@ div.shop .dropdown .dropdown-content > span.body a:hover {
 }
 
 .block-rows .block-row {
-  padding: 0px 0 16px;
-  border-top: 1px solid #d8d8d8;
+  padding: 10px 0 16px;
 }
 
 .block-rows .block-row--noborder {

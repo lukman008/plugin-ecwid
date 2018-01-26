@@ -126,12 +126,10 @@ function toggleMode() {
   var live_mode = document.getElementById("liveMode");
 
   if (document.querySelector('div#toggle input[type="checkbox"]').checked) {
-    live_mode.style.display = "none";
-    test_mode.style.display = "block";
-    document.querySelector("#mode").innerHTML = "<b>Live Mode.</b>";
-  } else {
     live_mode.style.display = "block";
     test_mode.style.display = "none";
-    document.querySelector("#mode").innerHTML = "<b>Test Mode.</b>";
+  } else {
+    live_mode.style.display = "none";
+    test_mode.style.display = "block";
   }
 }
