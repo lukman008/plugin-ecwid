@@ -426,7 +426,8 @@ h1,h2,h3,h4,h5,h6 {
 
 h1 {
     font-size: 2.125em;
-    margin: .765em 0
+    margin: .765em 0;
+    font-weight: 800;
 }
 
 h2 {
