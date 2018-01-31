@@ -1,0 +1,19 @@
+{
+  "name": "paystack-payment",
+  "version": "1.0.0",
+  "description": "Paystack payment method for Ecwid",
+  "main": "paystack.js",
+  "scripts": {
+    "start": "nodemon paystack.js"
+  },
+  "repository": "https://github.com/PaystackHQ/paystack-ecwid",
+  "author": "Stephen Amaza",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "nodemon": "^1.14.11"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
