@@ -1,8 +1,37 @@
-<?php 
+<?php
+/**
+ * Integration for Paystack to the Ecwid platform
+ *
+ * PHP version 7.0
+ *
+ * LICENSE: This source file is subject to version 3.01 of the PHP license
+ * that is available through the world-wide-web at the following URI:
+ * http://www.php.net/license/3_01.txt.  If you did not receive a copy of
+ * the PHP License and are unable to obtain it through the web, please
+ * send a note to license@php.net so we can mail you a copy immediately.
+ *
+ * @category   Controller
+ * @package    PaystackEcwid
+ * @author     Stephen Amaza <steve@paystack.com>
+ * @copyright  1997-2005 The PHP Group
+ * @license    http://www.php.net/license/3_01.txt  PHP License 3.01
+ * @version    SVN: $Id$
+ * @link       #
+ * @deprecated No depracation
+ */
 
-// Decoding the request to get order details
+/**
+ * Get and decode Ecwid details
+ *
+ * @param string $app_secret_key encryption key gotten from app secret key
+ * @param object $data           response from POST request
 
-function getEcwidPayload($app_secret_key, $data) {
+ * @throws ErrorException if the response is not of type 'object'.
+ * @author Ecwid team
+ * @return object $json
+ */ 
+function getEcwidPayload($app_secret_key, $data) 
+{
     $url = 'https://paystackintegrations.com/s/ecwid/payment/api/paystack.php';
 
     // Receive the POST request
@@ -12,15 +41,27 @@ function getEcwidPayload($app_secret_key, $data) {
     $encryption_key = substr($app_secret_key, 0, 16);
 
     // Decrypt payload
-    $json_data = aes_128_decrypt($encryption_key, $data);
+    $json_data = AES_128_decrypt($encryption_key, $data);
 
     // Decode json
     $json_decoded = json_decode($json_data, true);
     return $json_decoded;
 }
 
-function aes_128_decrypt($key, $data) {
-    // Ecwid sends data in url-safe base64. Convert the raw data to the original base64 first
+/**
+ * Does something interesting
+ *
+ * @param string $key  encryption key gotten from app secret key
+ * @param object $data response from POST request
+ * 
+ * @throws ErrorException if the response is not of type 'object'.
+ * @author Ecwid team
+ * @return object $json
+ */ 
+function AES_128_decrypt($key, $data) 
+{
+    // Ecwid sends data in url-safe base64. 
+    // Convert the raw data to the original base64 first
     $base64_original = str_replace(array('-', '_'), array('+', '/'), $data);
 
     // Get binary data
@@ -52,24 +93,22 @@ $storeId = $result['store_id'];
 $lang = $result['lang'];
 $viewMode = $result['view_mode'];
 
-if (isset($result['public_token'])){
-  $public_token = $result['public_token'];
+if (isset($result['public_token'])) {
+    $public_token = $result['public_token'];
 }
 
 // URL Encoded App state passed to the app
-if (isset($_GET['app_state'])){
-  $app_state = $_GET['app_state'];
+if (isset($_GET['app_state'])) {
+    $app_state = $_GET['app_state'];
 }
 
 // Get store specific data from storage endpoint
-$key = 'color';
-
 $url = 'https://app.ecwid.com/api/v3/' .$storeId. '/storage/' .'?token=' .$token;
 
 $ch = curl_init();
 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_URL,$url);
+curl_setopt($ch, CURLOPT_URL, $url);
 
 $curlResult = curl_exec($ch);
 curl_close($ch);
@@ -77,11 +116,11 @@ curl_close($ch);
 $curlResult = (json_decode($curlResult));
 $apikeys = $curlResult -> {'value'};
 
-  if ($apikeys !== null ) {
+if ($apikeys !== null ) {
     // set keys from storage
-    } else {
+} else {
     // set default keys
-  }
+}
 
 //
 //  Start the flow of your application
