@@ -34,9 +34,6 @@ function getEcwidPayload($app_secret_key, $data)
 {
     $url = 'https://paystackintegrations.com/s/ecwid/payment/api/paystack.php';
 
-    // Receive the POST request
-    $response = postRequestFromEcwid($url);
-
     // Get the encryption key (16 first bytes of the app's client_secret key)
     $encryption_key = substr($app_secret_key, 0, 16);
 
