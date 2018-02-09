@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Integration for Paystack to the Ecwid platform
  *
@@ -85,41 +86,44 @@ $client_secret = "ZQNXyVFBbUjAgoYGqDihDtsi3uKkAyTt";
 $result = getEcwidPayload($client_secret, $ecwid_payload);
 
 // Get store info from the payload
-$token = $result['access_token'];
-$storeId = $result['store_id'];
-$lang = $result['lang'];
-$viewMode = $result['view_mode'];
+$token = $result['token'];
+$storeId = $result['storeId'];
+$merchantSettings = $result['merchantAppSettings'];
+$cartDetails = $result['cart'];
+$orderDetails = $cartDetails['order'];
+$returnUrl = $result['returnUrl'];
+$testSecretKey = $merchantSettings['testSecretKey'];
 
-if (isset($result['public_token'])) {
-    $public_token = $result['public_token'];
-}
+// Initialize transaction
+$postdata = [
+    'email' => $orderDetails['email'], 
+    'amount' => $orderDetails['total'], 
+    // 'reference' => $orderDetails['referenceTransactionId']
+];
 
-// URL Encoded App state passed to the app
-if (isset($_GET['app_state'])) {
-    $app_state = $_GET['app_state'];
-}
+$url = 'https://api.paystack.co/transaction/initialize';
 
-// Get store specific data from storage endpoint
-$url = 'https://app.ecwid.com/api/v3/' .$storeId. '/storage/' .'?token=' .$token;
-
+$result = [];
 $ch = curl_init();
 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postdata));
 curl_setopt($ch, CURLOPT_URL, $url);
+$headers = [
+    "Authorization: Bearer $testSecretKey",
+    'Content-Type: application/json',
+];
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-$curlResult = curl_exec($ch);
+$request = curl_exec($ch);
+
 curl_close($ch);
 
-$curlResult = (json_decode($curlResult));
-$apikeys = $curlResult -> {'value'};
-
-if ($apikeys !== null ) {
-    // set keys from storage
-} else {
-    // set default keys
+if ($request) {
+    $result = json_decode($request);
 }
 
-//
-//  Start the flow of your application
-//  ...
+header('Location: ' . $result->data->authorization_url);
+
 ?>
