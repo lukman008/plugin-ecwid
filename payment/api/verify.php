@@ -62,6 +62,33 @@ curl_close($ch);
 if ($err) {
     echo "cURL Error #:" . $err;
 } else {
-    echo $response;
+    $result = json_decode($response, true);
+    if (!$result['data']) {
+        echo $result['message'];
+        exit();
+    } else {
+        $url = "https://app.ecwid.com/api/v3/" . $store_id . "/orders/" . $reference . "?token=" . $token_id;
+
+        if ($result['data']['status'] == 'success') {
+            //UPDATE ORDER STATUS TO PAID
+            $data = array('paymentStatus'=>'PAID');
+        } else {
+            //UPDATE ORDER STATUS TO CANCELLED
+            $data = array('paymentStatus'=>'CANCELLED');            
+        }
+        $data_json = json_encode($data);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json','Content-Length: ' . strlen($data_json)));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response  = curl_exec($ch);
+        curl_close($ch);
+
+        header("Location: " . $return_url);
+    }
 }
 
