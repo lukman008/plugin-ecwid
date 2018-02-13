@@ -92,14 +92,28 @@ $merchantSettings = $result['merchantAppSettings'];
 $cartDetails = $result['cart'];
 $orderDetails = $cartDetails['order'];
 $returnUrl = $result['returnUrl'];
-$testSecretKey = $merchantSettings['testSecretKey'];
+if ($testMode) {
+    $secretKey = $merchantSettings['testSecretKey'];
+} else {
+    $secretKey = $merchantSettings['testSecretKey'];    //TODO: Change this to live key parameters
+}
 
 // Initialize transaction
 $postdata = [
     'email' => $orderDetails['email'], 
-    'amount' => $orderDetails['total'], 
-    // 'reference' => $orderDetails['referenceTransactionId']
-];
+    'amount' => $orderDetails['total'] * 100,
+    'reference' => $orderDetails['referenceTransactionId'],
+    'callback_url' => 
+    'https://paystackintegrations.com/s/ecwid/payment/api/verify.php'
+]; 
+
+session_start();
+$_SESSION["store_id"] = $storeId;
+$_SESSION["token_id"] = $token;
+$_SESSION["return"] = $returnUrl;
+$_SESSION["secret_key"] = $secretKey;
+
+print_r($_SESSION);
 
 $url = 'https://api.paystack.co/transaction/initialize';
 
@@ -111,7 +125,7 @@ curl_setopt($ch, CURLOPT_POST, 1);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postdata));
 curl_setopt($ch, CURLOPT_URL, $url);
 $headers = [
-    "Authorization: Bearer $testSecretKey",
+    "Authorization: Bearer $secretKey",
     'Content-Type: application/json',
 ];
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
