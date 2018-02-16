@@ -92,10 +92,11 @@ $merchantSettings = $result['merchantAppSettings'];
 $cartDetails = $result['cart'];
 $orderDetails = $cartDetails['order'];
 $returnUrl = $result['returnUrl'];
-if ($testMode) {
-    $secretKey = $merchantSettings['testSecretKey'];
+
+if ($merchantSettings['liveMode'] == "true") {
+    $secretKey = $merchantSettings['liveSecretKey'];
 } else {
-    $secretKey = $merchantSettings['testSecretKey'];    //TODO: Change this to live key parameters
+    $secretKey = $merchantSettings['testSecretKey'];
 }
 
 // Initialize transaction

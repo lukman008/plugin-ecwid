@@ -22,26 +22,24 @@ if (storeData.app_state !== undefined) {
 // Default settings for new accounts
 
 var initialConfig = {
-  testMode: "true",
+  liveMode: true,
   testSecretKey: " ",
   testPublicKey: " ",
   liveSecretKey: " ",
-  livePublicKey: " ",
-  exists: "yes"
+  livePublicKey: " "
 };
 
 var loadedConfig = initialConfig;
 
 // Executes when we have a new user install the app. It creates and sets the default data using Ecwid JS SDK and Application storage
-
 function createUserData() {
-  EcwidApp.setAppStorage(initialConfig, function(lala) {
+  EcwidApp.setAppStorage(initialConfig, function(allKeys) {
     console.log("Initial user preferences saved!");
-    console.log(lala);
+    console.log(allKeys);
   });
 
   document.querySelector('div#toggle input[type="checkbox"]').checked =
-    initialConfig.testMode;
+    initialConfig.liveMode;
   document.querySelector("#test_secret").value = initialConfig.testSecretKey;
   document.querySelector("#test_public").value = initialConfig.testPublicKey;
   document.querySelector("#live_secret").value = initialConfig.liveSecretKey;
@@ -57,11 +55,12 @@ function createUserData() {
   loadedConfig = initialConfig;
 }
 
-// Executes if we have a user who logs in to the app not the first time. We load their preferences from Application storage with Ecwid JS SDK and display them in the app iterface
+// Executes if we have a user who logs in to the app not the first time. We load their preferences from Application storage with Ecwid JS SDK and display them in the app interface
 
 function getUserData() {
-  EcwidApp.getAppStorage("testMode", function(testMode) {
-    loadedConfig.testMode = testMode;
+  EcwidApp.getAppStorage("liveMode", function(liveMode) {
+    loadedConfig.liveMode = liveMode;
+    console.log("Is live mode on? " + liveMode);
   });
 
   EcwidApp.getAppStorage("testSecretKey", function(testSecretKey) {
@@ -82,16 +81,22 @@ function getUserData() {
 
   setTimeout(function() {
     document.querySelector('div#toggle input[type="checkbox"]').checked =
-      loadedConfig.testMode == "true";
-    document.querySelector('div#testMode input[type="text"]').value =
-      loadedConfig.testMode;
-    document.querySelector('div#liveMode input[type="text"]').value =
-      loadedConfig.liveMode;
+      loadedConfig.liveMode == true;
+    document.querySelector("#live_secret").value = loadedConfig.liveSecretKey;
+    document.querySelector("#live_public").value = loadedConfig.testPublicKey;
+    document.querySelector("#test_secret").value = loadedConfig.testSecretKey;
+    document.querySelector("#test_public").value = loadedConfig.testPublicKey;
     document
-      .querySelector("div#testMode .field__input")
+      .querySelector("#live_secret")
       .parentNode.classList.add("field--filled");
     document
-      .querySelector("div#liveMode .field__input")
+      .querySelector("#live_public")
+      .parentNode.classList.add("field--filled");
+    document
+      .querySelector("#test_secret")
+      .parentNode.classList.add("field--filled");
+    document
+      .querySelector("#test_public")
       .parentNode.classList.add("field--filled");
   }, 1500);
 }
@@ -104,7 +109,7 @@ function saveUserData() {
 
   var saveData = loadedConfig;
 
-  saveData.testMode = String(
+  saveData.liveMode = String(
     document.querySelector('div#toggle input[type="checkbox"]').checked
   );
   saveData.testSecretKey = document.querySelector("#test_secret").value;
