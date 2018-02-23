@@ -28,11 +28,14 @@ require_once './helpers.php';
 
 session_start();
 //Get data from Initialization page
-$reference = $_GET["reference"];
-echo 'THE ID IS ' . $id . '<br/>';
+$reference = filter_input(INPUT_GET, 'reference');
 
-$trx = R::load('request', 5);
-echo $trx;
+$trx = R::findOne('request', 'reference = ?', [$reference]);
+if(!$trx){
+    die('<!-- Silence is golden -->');
+}
+echo 'THE ID IS ' . $trx->id . '<br/>';
+
 die();
 
 $store_id = $_SESSION["store_id"];

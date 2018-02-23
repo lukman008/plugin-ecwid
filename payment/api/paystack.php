@@ -111,6 +111,7 @@ if ($merchantSettings['liveMode'] == "true") {
 // if (!isset($verifyData)) {
 //     $verifyData = new stdClass();
 // }
+$verifyData = new stdClass();
 $verifyData->token = $token;
 $verifyData->storeId = $storeId;
 $verifyData->secretKey = $secretKey;
