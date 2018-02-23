@@ -24,12 +24,16 @@
 ini_set('display_errors', 'on'); // display all reported errors when pushing output
 error_reporting(-1); // report all errors, warnings and notices
 
-// require './helpers.php';
-// $request = R::load('request', $id);
+require './helpers.php';
 
 session_start();
 //Get data from Initialization page
 $reference = $_GET["reference"];
+echo 'THE ID IS ' . $id . '<br/>';
+
+$trx = R::load('request', 5);
+echo $trx;
+die();
 
 $store_id = $_SESSION["store_id"];
 $token_id = $_SESSION["token_id"];
