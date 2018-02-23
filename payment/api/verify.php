@@ -24,6 +24,9 @@
 ini_set('display_errors', 'on'); // display all reported errors when pushing output
 error_reporting(-1); // report all errors, warnings and notices
 
+// require './helpers.php';
+// $request = R::load('request', $id);
+
 session_start();
 //Get data from Initialization page
 $reference = $_GET["reference"];

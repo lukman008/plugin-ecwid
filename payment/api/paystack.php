@@ -21,6 +21,11 @@
  * @deprecated No depracation
  */
 
+ini_set('display_errors', 'on'); // display all reported errors when pushing output
+error_reporting(-1); // report all errors, warnings and notices
+
+require './helpers.php';
+
 /**
  * Get and decode Ecwid details
  *
@@ -73,7 +78,6 @@ function AES_128_decrypt($key, $data)
 
     // Decrypt raw binary payload
     $json = openssl_decrypt($payload, "aes-128-cbc", $key, OPENSSL_RAW_DATA, $iv);
-    //$json = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $payload, MCRYPT_MODE_CBC, $iv); // You can use this instead of openssl_decrupt, if mcrypt is enabled in your system
 
     return $json;
 }
@@ -89,9 +93,14 @@ $result = getEcwidPayload($client_secret, $ecwid_payload);
 $token = $result['token'];
 $storeId = $result['storeId'];
 $merchantSettings = $result['merchantAppSettings'];
+$returnUrl = $result['returnUrl'];
 $cartDetails = $result['cart'];
 $orderDetails = $cartDetails['order'];
-$returnUrl = $result['returnUrl'];
+$email = $orderDetails['email'];
+$amount = $orderDetails['total'];
+$refererUrl = $orderDetails['refererUrl'];
+$timestamp = $orderDetails['createTimestamp'];
+$reference = $timestamp . '_' . $orderDetails['referenceTransactionId'];
 
 if ($merchantSettings['liveMode'] == "true") {
     $secretKey = $merchantSettings['liveSecretKey'];
@@ -99,22 +108,35 @@ if ($merchantSettings['liveMode'] == "true") {
     $secretKey = $merchantSettings['testSecretKey'];
 }
 
+// if (!isset($verifyData)) {
+//     $verifyData = new stdClass();
+// }
+$verifyData->token = $token;
+$verifyData->storeId = $storeId;
+$verifyData->secretKey = $secretKey;
+$verifyData->returnUrl = $returnUrl;
+
+$verify = json_encode($verifyData);
+
 // Initialize transaction
 $postdata = [
-    'email' => $orderDetails['email'], 
-    'amount' => $orderDetails['total'] * 100,
-    'reference' => $orderDetails['referenceTransactionId'],
+    'email' => $email, 
+    'amount' => $amount * 100,
+    'reference' => $reference,
     'callback_url' => 
     'https://paystackintegrations.com/s/ecwid/payment/api/verify.php'
 ]; 
 
-session_start();
-$_SESSION["store_id"] = $storeId;
-$_SESSION["token_id"] = $token;
-$_SESSION["return"] = $returnUrl;
-$_SESSION["secret_key"] = $secretKey;
+R::setAutoResolve(true);
+$request = R::dispense('request');
 
-print_r($_SESSION);
+$request->email = $email;
+$request->reference = $reference;
+$request->amount = $amount;
+$request->referer = $refererUrl;
+$request->verify_data = $verify;
+
+$id = R::store($request);
 
 $url = 'https://api.paystack.co/transaction/initialize';
 
@@ -136,7 +158,7 @@ $request = curl_exec($ch);
 curl_close($ch);
 
 if ($request) {
-    $result = json_decode($request);
+     $result = json_decode($request);
 }
 
 header('Location: ' . $result->data->authorization_url);
