@@ -31,8 +31,8 @@ session_start();
 $reference = $_GET["reference"];
 echo 'THE ID IS ' . $id . '<br/>';
 
-$trx = R::load('request', 5);
-echo $trx;
+$trx = R::findOne('request', 'reference = "' . $reference . '"');
+print_r($trx->email);
 die();
 
 $store_id = $_SESSION["store_id"];
