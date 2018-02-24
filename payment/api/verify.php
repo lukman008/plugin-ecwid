@@ -32,6 +32,8 @@ $reference = filter_input(INPUT_GET, 'reference');
 session_unset(); 
 
 $trx = R::findOne('request', 'reference = ?', [$reference]);
+
+$ecwid_ref = $trx->ecwid_ref;
 $verify_data = $trx->verify_data;
 $verify = json_decode($verify_data);
 
@@ -68,13 +70,12 @@ if ($err) {
     echo "cURL Error #:" . $err;
 } else {
     $result = json_decode($response, true);
-    $ecwid_ref = explode("-", $reference);
 
     if (!$result['data']) {
         echo $result['message'];
         exit();
     } else {
-        $url = "https://app.ecwid.com/api/v3/" . $store_id . "/orders/" . $ecwid_ref[1] . "?token=" . $token_id;
+        $url = "https://app.ecwid.com/api/v3/" . $store_id . "/orders/" . $ecwid_ref . "?token=" . $token_id;
 
         if ($result['data']['status'] == 'success') {
             //UPDATE ORDER STATUS TO PAID

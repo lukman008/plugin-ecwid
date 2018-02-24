@@ -99,8 +99,9 @@ $orderDetails = $cartDetails['order'];
 $email = $orderDetails['email'];
 $amount = $orderDetails['total'];
 $refererUrl = $orderDetails['refererUrl'];
-$timestamp = $orderDetails['createTimestamp'];
-$reference = $timestamp . '-' . $orderDetails['referenceTransactionId'];
+$ecwid_ref = $orderDetails['referenceTransactionId'];
+
+$reference = $ecwid_ref . '_' . ((rand(0, 9) * 100) + 1);
 
 if ($merchantSettings['liveMode'] == "true") {
     $secretKey = $merchantSettings['liveSecretKey'];
@@ -108,10 +109,10 @@ if ($merchantSettings['liveMode'] == "true") {
     $secretKey = $merchantSettings['testSecretKey'];
 }
 
-// if (!isset($verifyData)) {
-//     $verifyData = new stdClass();
-// }
-$verifyData = new stdClass();
+if (!isset($verifyData)) {
+    $verifyData = new stdClass();
+}
+
 $verifyData->token = $token;
 $verifyData->storeId = $storeId;
 $verifyData->secretKey = $secretKey;
@@ -125,18 +126,33 @@ $postdata = [
     'amount' => $amount * 100,
     'reference' => $reference,
     'callback_url' => 
-    'https://paystackintegrations.com/s/ecwid/payment/api/verify.php'
-]; 
+    'https://paystackintegrations.com/s/ecwid/payment/api/verify.php',
+    'custom_fields' => [
+      [
+        "display_name" => "Ecwid Reference",
+        "variable_name" => "ecwid_ref",
+        "value" => $ecwid_ref,
+      ],
+      [
+        "display_name" => "Paid On",
+        "variable_name" => "paid_on",
+        "value" => "Ecwid Store",
+      ],
+    ]
+];
 
 R::setAutoResolve(true);
 $request = R::dispense('request');
 
+// store columns for database
 $request->email = $email;
 $request->reference = $reference;
+$request->ecwid_ref = $ecwid_ref;
 $request->amount = $amount;
 $request->referer = $refererUrl;
 $request->verify_data = $verify;
 
+//Store columns in database
 $id = R::store($request);
 
 $url = 'https://api.paystack.co/transaction/initialize';
@@ -154,14 +170,14 @@ $headers = [
 ];
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-$request = curl_exec($ch);
+$api_request = curl_exec($ch);
 
 curl_close($ch);
 
-if ($request) {
-     $result = json_decode($request);
+if ($api_request) {
+     $response = json_decode($api_request);
 }
 
-header('Location: ' . $result->data->authorization_url);
+header('Location: ' . $response->data->authorization_url);
 
 ?>
