@@ -127,18 +127,20 @@ $postdata = [
     'reference' => $reference,
     'callback_url' => 
     'https://paystackintegrations.com/s/ecwid/payment/api/verify.php',
-    'custom_fields' => [
-      [
-        "display_name" => "Ecwid Reference",
-        "variable_name" => "ecwid_ref",
-        "value" => $ecwid_ref,
-      ],
-      [
-        "display_name" => "Paid On",
-        "variable_name" => "paid_on",
-        "value" => "Ecwid Store",
-      ],
-    ]
+    'metadata' => [
+        'custom_fields' => [
+            [
+            "display_name" => "Ecwid Reference",
+            "variable_name" => "ecwid_ref",
+            "value" => $ecwid_ref,
+            ],
+            [
+            "display_name" => "Paid On",
+            "variable_name" => "paid_on",
+            "value" => "Ecwid Store",
+            ],
+        ]
+    ],
 ];
 
 R::setAutoResolve(true);
