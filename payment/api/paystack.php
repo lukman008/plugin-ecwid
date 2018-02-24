@@ -24,7 +24,7 @@
 ini_set('display_errors', 'on'); // display all reported errors when pushing output
 error_reporting(-1); // report all errors, warnings and notices
 
-require './helpers.php';
+require_once './helpers.php';
 
 /**
  * Get and decode Ecwid details
@@ -100,7 +100,7 @@ $email = $orderDetails['email'];
 $amount = $orderDetails['total'];
 $refererUrl = $orderDetails['refererUrl'];
 $timestamp = $orderDetails['createTimestamp'];
-$reference = $timestamp . '_' . $orderDetails['referenceTransactionId'];
+$reference = $timestamp . '-' . $orderDetails['referenceTransactionId'];
 
 if ($merchantSettings['liveMode'] == "true") {
     $secretKey = $merchantSettings['liveSecretKey'];
@@ -111,6 +111,7 @@ if ($merchantSettings['liveMode'] == "true") {
 // if (!isset($verifyData)) {
 //     $verifyData = new stdClass();
 // }
+$verifyData = new stdClass();
 $verifyData->token = $token;
 $verifyData->storeId = $storeId;
 $verifyData->secretKey = $secretKey;

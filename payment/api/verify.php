@@ -24,23 +24,21 @@
 ini_set('display_errors', 'on'); // display all reported errors when pushing output
 error_reporting(-1); // report all errors, warnings and notices
 
-require './helpers.php';
+require_once './helpers.php';
 
 session_start();
 //Get data from Initialization page
-$reference = $_GET["reference"];
-echo 'THE ID IS ' . $id . '<br/>';
-
-$trx = R::findOne('request', 'reference = "' . $reference . '"');
-print_r($trx->email);
-die();
-
-$store_id = $_SESSION["store_id"];
-$token_id = $_SESSION["token_id"];
-$return_url = $_SESSION["return"];
-$secret_key = $_SESSION["secret_key"];
-
+$reference = filter_input(INPUT_GET, 'reference');
 session_unset(); 
+
+$trx = R::findOne('request', 'reference = ?', [$reference]);
+$verify_data = $trx->verify_data;
+$verify = json_decode($verify_data);
+
+$store_id = $verify->storeId;
+$token_id = $verify->token;
+$return_url = $verify->returnUrl;
+$secret_key = $verify->secretKey;
 
 $url = "https://api.paystack.co/transaction/verify/" . $reference;
 
@@ -70,11 +68,13 @@ if ($err) {
     echo "cURL Error #:" . $err;
 } else {
     $result = json_decode($response, true);
+    $ecwid_ref = explode("-", $reference);
+
     if (!$result['data']) {
         echo $result['message'];
         exit();
     } else {
-        $url = "https://app.ecwid.com/api/v3/" . $store_id . "/orders/" . $reference . "?token=" . $token_id;
+        $url = "https://app.ecwid.com/api/v3/" . $store_id . "/orders/" . $ecwid_ref[1] . "?token=" . $token_id;
 
         if ($result['data']['status'] == 'success') {
             //UPDATE ORDER STATUS TO PAID
@@ -83,6 +83,7 @@ if ($err) {
             //UPDATE ORDER STATUS TO CANCELLED
             $data = array('paymentStatus'=>'CANCELLED');            
         }
+
         $data_json = json_encode($data);
 
         $ch = curl_init();
@@ -93,6 +94,7 @@ if ($err) {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         $response  = curl_exec($ch);
+
         curl_close($ch);
 
         header("Location: " . $return_url);
