@@ -130,7 +130,7 @@ $postdata = [
     'metadata' => [
         'custom_fields' => [
             [
-            "display_name" => "Ecwid Reference",
+            "display_name" => "Store Reference",
             "variable_name" => "ecwid_ref",
             "value" => $ecwid_ref,
             ],
