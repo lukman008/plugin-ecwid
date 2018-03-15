@@ -56,11 +56,10 @@ function getUserData() {
 
   EcwidApp.getAppStorage("liveMode", function(liveMode) {
     console.log("Live mode is " + liveMode);
-    if (liveMode === "true"){
+    if (liveMode === "true") {
       document.querySelector("#toggle input[type=checkbox]").checked = true;
       toggleMode();
-    }
-    else {
+    } else {
       document.querySelector("#toggle input[type=checkbox]").checked = false;
     }
   });
@@ -84,19 +83,6 @@ function getUserData() {
     loadedConfig.livePublicKey = livePublicKey;
     document.getElementById("live_public").value = loadedConfig.livePublicKey;
   });
-
-  setTimeout(function() {
-    //   document.querySelector('div#toggle input[type="checkbox"]').checked =
-    //     loadedConfig.liveMode == true;
-    //   // if(!loadedConfig.liveMode){
-    //   //   toggleMode();
-    //   // }
-    //   // toggleMode();
-    //   document.querySelector("#live_secret").value = loadedConfig.liveSecretKey;
-    //   document.querySelector("#live_public").value = loadedConfig.testPublicKey;
-    //   document.querySelector("#test_secret").value = loadedConfig.testSecretKey;
-    //   document.querySelector("#test_public").value = loadedConfig.testPublicKey;
-  }, 10000);
   return loadedConfig;
 }
 
@@ -112,20 +98,72 @@ function saveUserData() {
   saveData.liveMode = String(
     document.querySelector('div#toggle input[type="checkbox"]').checked
   );
-  saveData.testSecretKey = document.querySelector("#test_secret").value;
-  saveData.testPublicKey = document.querySelector("#test_public").value;
-  saveData.liveSecretKey = document.querySelector("#live_secret").value;
-  saveData.livePublicKey = document.querySelector("#live_public").value;
+  saveData.testSecretKey = String(
+    document.querySelector("#test_secret").value
+  ).trim();
+  saveData.testPublicKey = String(
+    document.querySelector("#test_public").value
+  ).trim();
+  saveData.liveSecretKey = String(
+    document.querySelector("#live_secret").value
+  ).trim();
+  saveData.livePublicKey = String(
+    document.querySelector("#live_public").value
+  ).trim();
 
-  console.log(saveData);
-
-  EcwidApp.setAppStorage(saveData, function(savedData) {
-    console.log("User preferences saved!");
-    console.log(savedData);
+  var cb = function(valid) {
+    if (valid) {
+      EcwidApp.setAppStorage(saveData, function(savedData) {
+        console.log("User preferences saved!");
+        console.log(savedData);
+      });
+      EcwidApp.closeAppPopup();
+    } else if (valid === null) {
+      document.getElementById("error-message").innerHTML =
+        "An error occured while validating your API keys, please try again";
+    } else {
+      document.getElementById("error-message").innerHTML =
+        "The API key pair does not match. Please check your <a href='https://dashboard.paystack.com/#/settings/developer target='_blank'>dashboard</a> and try again";
+    }
     d.className = "btn btn-primary btn-large";
+  };
+
+  var validated = false;
+  if (String(saveData.liveMode) === "true") {
+    validated = validate(saveData.liveSecretKey, saveData.livePublicKey, cb);
+  } else {
+    validated = validate(saveData.testSecretKey, saveData.testPublicKey, cb);
+  }
+}
+
+function validate(secret_key, public_key, cb) {
+  var data = null;
+
+  var xhr = new XMLHttpRequest();
+  xhr.withCredentials = true;
+  //xhr.
+
+  xhr.addEventListener("readystatechange", function() {
+    if (this.readyState === 4) {
+      if (this.status === 200) {
+        try {
+          var result = JSON.parse(this.responseText);
+          cb(result.data.public_key === public_key);
+        } catch (error) {
+          cb(null);
+        }
+      } else {
+        cb(false);
+      }
+    }
   });
 
-  EcwidApp.closeAppPopup();
+  xhr.open("GET", "https://api.paystack.co/ident", false);
+  xhr.setRequestHeader("Authorization", "Bearer " + secret_key);
+
+  //console.log(this.responseText);
+
+  return xhr.send(data);
 }
 
 function toggleMode() {
