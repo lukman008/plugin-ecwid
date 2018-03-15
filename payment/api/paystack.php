@@ -105,8 +105,6 @@ if ($merchantSettings['liveMode'] == "true") {
 } else {
     $secretKey = trim($merchantSettings['testSecretKey']);
 }
-print_r($merchantSettings);
-die();
 
 if (!isset($verifyData)) {
     $verifyData = new stdClass();

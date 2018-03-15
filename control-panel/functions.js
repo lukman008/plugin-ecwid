@@ -75,9 +75,9 @@ function getUserData() {
     document.getElementById("test_public").value = loadedConfig.testPublicKey;
   });
 
-  EcwidApp.getAppStorage("liveTestKey", function(liveTestKey) {
-    loadedConfig.liveTestKey = liveTestKey;
-    document.getElementById("live_test").value = loadedConfig.liveTestKey;
+  EcwidApp.getAppStorage("liveSecretKey", function(liveSecretKey) {
+    loadedConfig.liveSecretKey = liveSecretKey;
+    document.getElementById("live_secret").value = loadedConfig.liveSecretKey;
   });
 
   EcwidApp.getAppStorage("livePublicKey", function(livePublicKey) {
