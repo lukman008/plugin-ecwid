@@ -22,7 +22,7 @@ if (storeData.app_state !== undefined) {
 // Default settings for new accounts
 
 var initialConfig = {
-  liveMode: true,
+  liveMode: false,
   testSecretKey: " ",
   testPublicKey: " ",
   liveSecretKey: " ",
@@ -33,77 +33,77 @@ var loadedConfig = initialConfig;
 
 // Executes when we have a new user install the app. It creates and sets the default data using Ecwid JS SDK and Application storage
 function createUserData() {
+  console.log("creating user data");
   EcwidApp.setAppStorage(initialConfig, function(allKeys) {
     console.log("Initial user preferences saved!");
     console.log(allKeys);
   });
 
-  document.querySelector('div#toggle input[type="checkbox"]').checked =
+  document.querySelector('#toggle input[type="checkbox"]').checked =
     initialConfig.liveMode;
   document.querySelector("#test_secret").value = initialConfig.testSecretKey;
   document.querySelector("#test_public").value = initialConfig.testPublicKey;
   document.querySelector("#live_secret").value = initialConfig.liveSecretKey;
   document.querySelector("#live_public").value = initialConfig.livePublicKey;
-  document
-    .querySelector("div#testMode .field__input")
-    .parentNode.classList.add("field--filled");
-  document
-    .querySelector("div#liveMode .field__input")
-    .parentNode.classList.add("field--filled");
 
   // Setting flag to determine that we already created and saved defaults for this user
   loadedConfig = initialConfig;
 }
 
 // Executes if we have a user who logs in to the app not the first time. We load their preferences from Application storage with Ecwid JS SDK and display them in the app interface
-
 function getUserData() {
+  console.log("Getting user data");
+
   EcwidApp.getAppStorage("liveMode", function(liveMode) {
-    loadedConfig.liveMode = liveMode;
-    console.log("Is live mode on? " + liveMode);
+    console.log("Live mode is " + liveMode);
+    if (liveMode === "true"){
+      document.querySelector("#toggle input[type=checkbox]").checked = true;
+      toggleMode();
+    }
+    else {
+      document.querySelector("#toggle input[type=checkbox]").checked = false;
+    }
   });
 
   EcwidApp.getAppStorage("testSecretKey", function(testSecretKey) {
     loadedConfig.testSecretKey = testSecretKey;
+    document.getElementById("test_secret").value = loadedConfig.testSecretKey;
   });
 
   EcwidApp.getAppStorage("testPublicKey", function(testPublicKey) {
     loadedConfig.testPublicKey = testPublicKey;
+    document.getElementById("test_public").value = loadedConfig.testPublicKey;
   });
 
-  EcwidApp.getAppStorage("testSecretKey", function(liveSecretKey) {
-    loadedConfig.liveSecretKey = liveSecretKey;
+  EcwidApp.getAppStorage("liveTestKey", function(liveTestKey) {
+    loadedConfig.liveTestKey = liveTestKey;
+    document.getElementById("live_test").value = loadedConfig.liveTestKey;
   });
 
-  EcwidApp.getAppStorage("testSecretKey", function(livePublicKey) {
+  EcwidApp.getAppStorage("livePublicKey", function(livePublicKey) {
     loadedConfig.livePublicKey = livePublicKey;
+    document.getElementById("live_public").value = loadedConfig.livePublicKey;
   });
 
   setTimeout(function() {
-    document.querySelector('div#toggle input[type="checkbox"]').checked =
-      loadedConfig.liveMode == true;
-    document.querySelector("#live_secret").value = loadedConfig.liveSecretKey;
-    document.querySelector("#live_public").value = loadedConfig.testPublicKey;
-    document.querySelector("#test_secret").value = loadedConfig.testSecretKey;
-    document.querySelector("#test_public").value = loadedConfig.testPublicKey;
-    document
-      .querySelector("#live_secret")
-      .parentNode.classList.add("field--filled");
-    document
-      .querySelector("#live_public")
-      .parentNode.classList.add("field--filled");
-    document
-      .querySelector("#test_secret")
-      .parentNode.classList.add("field--filled");
-    document
-      .querySelector("#test_public")
-      .parentNode.classList.add("field--filled");
-  }, 1500);
+    //   document.querySelector('div#toggle input[type="checkbox"]').checked =
+    //     loadedConfig.liveMode == true;
+    //   // if(!loadedConfig.liveMode){
+    //   //   toggleMode();
+    //   // }
+    //   // toggleMode();
+    //   document.querySelector("#live_secret").value = loadedConfig.liveSecretKey;
+    //   document.querySelector("#live_public").value = loadedConfig.testPublicKey;
+    //   document.querySelector("#test_secret").value = loadedConfig.testSecretKey;
+    //   document.querySelector("#test_public").value = loadedConfig.testPublicKey;
+  }, 10000);
+  return loadedConfig;
 }
 
 // Executes when we need to save data. Gets all elements' values and saves them to Application storage via Ecwid JS SDK
 
 function saveUserData() {
+  console.log("Saving user data");
   var d = document.getElementById("save");
   d.className += " btn-loading";
 
@@ -124,13 +124,15 @@ function saveUserData() {
     console.log(savedData);
     d.className = "btn btn-primary btn-large";
   });
+
+  EcwidApp.closeAppPopup();
 }
 
 function toggleMode() {
   var test_mode = document.getElementById("testMode");
   var live_mode = document.getElementById("liveMode");
 
-  if (document.querySelector('div#toggle input[type="checkbox"]').checked) {
+  if (document.querySelector('#toggle input[type="checkbox"]').checked) {
     live_mode.style.display = "block";
     test_mode.style.display = "none";
   } else {

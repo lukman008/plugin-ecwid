@@ -21,9 +21,6 @@
  * @deprecated No depracation
  */
 
-ini_set('display_errors', 'on'); // display all reported errors when pushing output
-error_reporting(-1); // report all errors, warnings and notices
-
 require_once './helpers.php';
 
 /**
@@ -90,31 +87,33 @@ $client_secret = "ZQNXyVFBbUjAgoYGqDihDtsi3uKkAyTt";
 $result = getEcwidPayload($client_secret, $ecwid_payload);
 
 // Get store info from the payload
-$token = $result['token'];
-$storeId = $result['storeId'];
+$token            = $result['token'];
+$storeId          = $result['storeId'];
 $merchantSettings = $result['merchantAppSettings'];
-$returnUrl = $result['returnUrl'];
-$cartDetails = $result['cart'];
-$orderDetails = $cartDetails['order'];
-$email = $orderDetails['email'];
-$amount = $orderDetails['total'];
-$refererUrl = $orderDetails['refererUrl'];
-$ecwid_ref = $orderDetails['referenceTransactionId'];
+$returnUrl        = $result['returnUrl'];
+$cartDetails      = $result['cart'];
+$orderDetails     = $cartDetails['order'];
+$email            = $orderDetails['email'];
+$amount           = $orderDetails['total'];
+$refererUrl       = $orderDetails['refererUrl'];
+$ecwid_ref        = $orderDetails['referenceTransactionId'];
 
-$reference = $ecwid_ref . '_' . ((rand(0, 9) * 100) + 1);
+$reference        = $ecwid_ref . '_' . ((rand(0, 9) * 100) + 1);
 
 if ($merchantSettings['liveMode'] == "true") {
-    $secretKey = $merchantSettings['liveSecretKey'];
+    $secretKey = trim($merchantSettings['liveSecretKey']);
 } else {
-    $secretKey = $merchantSettings['testSecretKey'];
+    $secretKey = trim($merchantSettings['testSecretKey']);
 }
+print_r($merchantSettings);
+die();
 
 if (!isset($verifyData)) {
     $verifyData = new stdClass();
 }
 
-$verifyData->token = $token;
-$verifyData->storeId = $storeId;
+$verifyData->token     = $token;
+$verifyData->storeId   = $storeId;
 $verifyData->secretKey = $secretKey;
 $verifyData->returnUrl = $returnUrl;
 
@@ -147,11 +146,11 @@ R::setAutoResolve(true);
 $request = R::dispense('request');
 
 // store columns for database
-$request->email = $email;
-$request->reference = $reference;
-$request->ecwid_ref = $ecwid_ref;
-$request->amount = $amount;
-$request->referer = $refererUrl;
+$request->email       = $email;
+$request->reference   = $reference;
+$request->ecwid_ref   = $ecwid_ref;
+$request->amount      = $amount;
+$request->referer     = $refererUrl;
 $request->verify_data = $verify;
 
 //Store columns in database
