@@ -116,16 +116,38 @@ function saveUserData() {
       EcwidApp.setAppStorage(saveData, function(savedData) {
         console.log("User preferences saved!");
         console.log(savedData);
+        document
+          .getElementById("message-bg")
+          .setAttribute("class", "key-success-bg");
+        document.getElementById("key-message").innerHTML =
+          "Success";
+        document
+          .getElementById("key-message")
+          .setAttribute("class", "key-success");
       });
       EcwidApp.closeAppPopup();
     } else if (valid === null) {
-      document.getElementById("error-message").innerHTML =
+      document
+        .getElementById("message-bg")
+        .setAttribute("class", "key-error-bg");
+      document.getElementById("key-message").innerHTML =
         "An error occured while validating your API keys, please try again";
+      document
+        .getElementById("key-message")
+        .setAttribute("class", "key-error");
     } else {
-      document.getElementById("error-message").innerHTML =
+      document
+        .getElementById("message-bg")
+        .setAttribute("class", "key-error-bg");
+      document.getElementById("key-message").innerHTML =
         "The API key pair does not match. Please check your <a href='https://dashboard.paystack.com/#/settings/developer target='_blank'>dashboard</a> and try again";
+      document
+        .getElementById("key-message")
+        .setAttribute("class", "key-error");
     }
-    d.className = "btn btn-primary btn-large";
+    setTimeout(function() {
+      d.className = "btn btn-primary btn-large";
+    }, 500);
   };
 
   var validated = false;

@@ -8576,3 +8576,21 @@ div#appContent {
 .emptyPageImage {
     text-align: center;
 }
+
+.key-error-bg {
+    background: #ffe3e3; 
+    padding:5px;
+}
+
+.key-success-bg {
+    background: #def3e7; 
+    padding:5px;
+}
+
+.key-error {
+     color: #e60000; 
+}
+
+.key-success {
+     color: #007721; 
+}

@@ -79,6 +79,40 @@ function AES_128_decrypt($key, $data)
     return $json;
 }
 
+/**
+ * Updates the order status to failed
+ *
+ * @param string $store_id  Ecwid identifier for store
+ * @param string $reference encryption key gotten from app secret key
+ * @param string $token     response from POST request
+ * 
+ * @throws ErrorException if the response is not of type 'object'.
+ * @author Stephen Amaza
+ * @return object $json
+ */ 
+function updateOrder($store_id, $reference, $token)
+{
+    $url = "https://app.ecwid.com/api/v3/" . $store_id . "/orders/" . $reference .
+    "?" . $token;
+    $data = array('paymentStatus'=>'INCOMPLETE');
+    $data_json = json_encode($data);
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt(
+        $ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data_json)
+            )
+    );
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data_json);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response  = curl_exec($ch);
+    curl_close($ch);
+}
+
 // Get payload from the POST and process it
 $ecwid_payload = $_POST['data'];
 $client_secret = "ZQNXyVFBbUjAgoYGqDihDtsi3uKkAyTt";
@@ -92,6 +126,7 @@ $storeId          = $result['storeId'];
 $merchantSettings = $result['merchantAppSettings'];
 $returnUrl        = $result['returnUrl'];
 $cartDetails      = $result['cart'];
+$currency         = $cartDetails['currency'];
 $orderDetails     = $cartDetails['order'];
 $email            = $orderDetails['email'];
 $amount           = $orderDetails['total'];
@@ -122,6 +157,7 @@ $postdata = [
     'email' => $email, 
     'amount' => $amount * 100,
     'reference' => $reference,
+    'currency' => $currency,
     'callback_url' => 
     'https://paystackintegrations.com/s/ecwid/payment/api/verify.php',
     'metadata' => [
@@ -177,6 +213,13 @@ if ($api_request) {
      $response = json_decode($api_request);
 }
 
-header('Location: ' . $response->data->authorization_url);
+if ($response->status) {
+    header('Location: ' . $response->data->authorization_url);
+} else {
+    updateOrder($storeId, $ecwid_ref, $token);
+    header('Location: ' . $returnUrl);    
+}
+print_r($response);
+die();
 
 ?>
