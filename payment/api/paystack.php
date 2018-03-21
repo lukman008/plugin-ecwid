@@ -217,9 +217,8 @@ if ($response->status) {
     header('Location: ' . $response->data->authorization_url);
 } else {
     updateOrder($storeId, $ecwid_ref, $token);
-    header('Location: ' . $returnUrl);    
+    echo "<p style='text-align: center; margin-top:50px'>$response->message ...</p>";
+    echo "<script>setTimeout(\"location.href = '$returnUrl';\",1500);</script>";
 }
-print_r($response);
-die();
 
 ?>
