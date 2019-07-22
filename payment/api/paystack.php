@@ -137,8 +137,10 @@ $reference        = $ecwid_ref . '_' . ((rand(0, 9) * 100) + 1);
 
 if ($merchantSettings['liveMode'] == "true") {
     $secretKey = trim($merchantSettings['liveSecretKey']);
+    $publicKey = trim($merchantSettings['livePublicKey']);
 } else {
     $secretKey = trim($merchantSettings['testSecretKey']);
+    $publicKey = trim($merchantSettings['testPublicKey']);
 }
 
 if (!isset($verifyData)) {
@@ -148,6 +150,7 @@ if (!isset($verifyData)) {
 $verifyData->token     = $token;
 $verifyData->storeId   = $storeId;
 $verifyData->secretKey = $secretKey;
+$verifyData->publicKey = $publicKey;
 $verifyData->returnUrl = $returnUrl;
 
 $verify = json_encode($verifyData);
@@ -167,6 +170,11 @@ $postdata = [
             "variable_name" => "ecwid_ref",
             "value" => $ecwid_ref,
             ],
+            [
+                "display_name" => "Plugin",
+                "variable_name" => "plugin",
+                "value" => 'ecwid',
+                ],
             [
             "display_name" => "Paid On",
             "variable_name" => "paid_on",

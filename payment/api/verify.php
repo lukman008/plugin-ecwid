@@ -25,6 +25,8 @@ ini_set('display_errors', 'on'); // display all reported errors when pushing out
 error_reporting(-1); // report all errors, warnings and notices
 
 require_once './helpers.php';
+require_once './paystack-plugin-tracker.php';
+
 
 session_start();
 //Get data from Initialization page
@@ -41,6 +43,8 @@ $store_id = $verify->storeId;
 $token_id = $verify->token;
 $return_url = $verify->returnUrl;
 $secret_key = $verify->secretKey;
+$public_key = $verify->publicKey;
+
 
 $url = "https://api.paystack.co/transaction/verify/" . $reference;
 
@@ -78,7 +82,14 @@ if ($err) {
         $url = "https://app.ecwid.com/api/v3/" . $store_id . "/orders/" . $ecwid_ref . "?token=" . $token_id;
 
         if ($result['data']['status'] == 'success') {
+            //PSTK plugin tracker
+            $pstk_logger = new ecwid_paystack_plugin_tracker('ecwid', $public_key);
+            $pstk_logger->log_transaction_success($reference);
+
+            //----------------------------------
+            
             //UPDATE ORDER STATUS TO PAID
+
             $data = array('paymentStatus'=>'PAID');
         } else {
             //UPDATE ORDER STATUS TO CANCELLED
